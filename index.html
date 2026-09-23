@@ -15,7 +15,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
   <style>
     /* ==========================================================================
@@ -24,8 +24,8 @@
     :root {
       --bg-dark: #080B14;
       --bg-midnight: #0D1224;
-      --bg-card: rgba(18, 24, 42, 0.65);
-      --bg-card-hover: rgba(26, 34, 58, 0.75);
+      --bg-card: rgba(14, 20, 38, 0.72);
+      --bg-card-hover: rgba(22, 30, 54, 0.82);
       
       --accent-rose: #FF7597;
       --accent-coral: #FF6B6B;
@@ -37,11 +37,12 @@
       --text-secondary: #94A3B8;
       --text-muted: #64748B;
 
-      --border-glass: rgba(255, 255, 255, 0.12);
-      --border-glow: rgba(255, 117, 151, 0.35);
+      --border-glass: rgba(255, 255, 255, 0.14);
+      --border-glow: rgba(255, 117, 151, 0.45);
 
       --font-display: 'Playfair Display', Georgia, serif;
       --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-cursive: 'Alex Brush', cursive, Georgia, serif;
 
       --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -183,53 +184,150 @@
       gap: 0.75rem;
     }
 
-    /* Sound Button */
+    /* Sound Button & Audio Visualizer */
     .sound-toggle-btn {
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(18, 24, 48, 0.7);
       border: 1px solid var(--border-glass);
       color: var(--text-secondary);
       border-radius: 9999px;
-      padding: 0.5rem 0.875rem;
+      padding: 0.45rem 0.95rem;
       font-size: 0.8125rem;
+      font-weight: 500;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.55rem;
       cursor: pointer;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: all 0.3s ease;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       touch-action: manipulation;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+      user-select: none;
     }
 
     .sound-toggle-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: var(--text-primary);
-      border-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-1px);
+      background: rgba(26, 34, 64, 0.9);
+      color: #FFFFFF;
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 25px rgba(255, 117, 151, 0.35), 0 0 15px rgba(252, 211, 77, 0.25);
+      border-color: rgba(255, 117, 151, 0.55);
+    }
+
+    .sound-toggle-btn:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    .sound-toggle-btn.sound-playing {
+      color: #FFFFFF;
+      border-color: rgba(255, 117, 151, 0.45);
+      background: linear-gradient(135deg, rgba(255, 117, 151, 0.18) 0%, rgba(252, 211, 77, 0.12) 50%, rgba(167, 139, 250, 0.18) 100%);
+      box-shadow: 0 4px 20px rgba(255, 117, 151, 0.25);
+    }
+
+    .sound-toggle-btn.sound-playing:hover {
+      box-shadow: 0 8px 30px rgba(255, 117, 151, 0.5), 0 0 20px rgba(252, 211, 77, 0.35);
+      border-color: var(--accent-rose);
+    }
+
+    .sound-icon-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: var(--accent-rose);
+      transition: transform 0.25s ease;
+    }
+
+    .sound-toggle-btn:hover .sound-icon-wrap {
+      transform: scale(1.15);
     }
 
     .sound-wave-bars {
       display: inline-flex;
-      align-items: center;
-      gap: 2px;
-      height: 12px;
+      align-items: flex-end;
+      gap: 2.5px;
+      height: 15px;
+      padding: 0 1px;
     }
 
     .sound-bar {
-      width: 2px;
-      height: 4px;
-      background-color: currentColor;
-      border-radius: 1px;
-      transition: height 0.2s ease;
+      width: 2.5px;
+      height: 3px;
+      background: linear-gradient(to top, #FF7597, #FCD34D);
+      border-radius: 9999px;
+      transition: height 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+      opacity: 0.45;
     }
 
-    .sound-playing .sound-bar:nth-child(1) { animation: soundAnim 0.7s infinite alternate ease-in-out; }
-    .sound-playing .sound-bar:nth-child(2) { animation: soundAnim 0.9s infinite 0.2s alternate ease-in-out; }
-    .sound-playing .sound-bar:nth-child(3) { animation: soundAnim 0.6s infinite 0.4s alternate ease-in-out; }
+    /* Hover effect on muted bars: gentle animated wave invite */
+    .sound-toggle-btn:not(.sound-playing):hover .sound-bar {
+      opacity: 0.85;
+      animation: soundMutedWave 0.9s infinite alternate ease-in-out;
+    }
+    .sound-toggle-btn:not(.sound-playing):hover .sound-bar:nth-child(1) { animation-delay: 0s; }
+    .sound-toggle-btn:not(.sound-playing):hover .sound-bar:nth-child(2) { animation-delay: 0.12s; }
+    .sound-toggle-btn:not(.sound-playing):hover .sound-bar:nth-child(3) { animation-delay: 0.24s; }
+    .sound-toggle-btn:not(.sound-playing):hover .sound-bar:nth-child(4) { animation-delay: 0.36s; }
+    .sound-toggle-btn:not(.sound-playing):hover .sound-bar:nth-child(5) { animation-delay: 0.48s; }
 
-    @keyframes soundAnim {
+    @keyframes soundMutedWave {
       0% { height: 3px; }
-      100% { height: 13px; }
+      100% { height: 9px; }
+    }
+
+    /* Playing state visualizer bars */
+    .sound-playing .sound-bar {
+      opacity: 1;
+    }
+
+    .sound-playing .sound-bar:nth-child(1) {
+      animation: soundAnim1 0.75s infinite ease-in-out alternate;
+    }
+    .sound-playing .sound-bar:nth-child(2) {
+      animation: soundAnim2 0.6s infinite 0.15s ease-in-out alternate;
+    }
+    .sound-playing .sound-bar:nth-child(3) {
+      animation: soundAnim3 0.85s infinite 0.3s ease-in-out alternate;
+    }
+    .sound-playing .sound-bar:nth-child(4) {
+      animation: soundAnim4 0.65s infinite 0.1s ease-in-out alternate;
+    }
+    .sound-playing .sound-bar:nth-child(5) {
+      animation: soundAnim5 0.8s infinite 0.25s ease-in-out alternate;
+    }
+
+    .sound-playing:hover .sound-bar {
+      filter: brightness(1.25) drop-shadow(0 0 3px rgba(255, 117, 151, 0.8));
+    }
+
+    @keyframes soundAnim1 {
+      0% { height: 4px; }
+      50% { height: 13px; }
+      100% { height: 6px; }
+    }
+    @keyframes soundAnim2 {
+      0% { height: 8px; }
+      50% { height: 4px; }
+      100% { height: 15px; }
+    }
+    @keyframes soundAnim3 {
+      0% { height: 5px; }
+      50% { height: 16px; }
+      100% { height: 8px; }
+    }
+    @keyframes soundAnim4 {
+      0% { height: 11px; }
+      50% { height: 5px; }
+      100% { height: 14px; }
+    }
+    @keyframes soundAnim5 {
+      0% { height: 3px; }
+      50% { height: 12px; }
+      100% { height: 5px; }
     }
 
     /* Main Container & Stage Screens */
@@ -257,7 +355,28 @@
       transform: translateY(0) scale(1);
     }
 
-    /* Glassmorphism Cards */
+    /* Polished Transitions: Smooth cascading fade-in */
+    .stage-view.active > * {
+      animation: stageFadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .stage-view.active .fade-cascade-1 { animation-delay: 0.06s; }
+    .stage-view.active .fade-cascade-2 { animation-delay: 0.14s; }
+    .stage-view.active .fade-cascade-3 { animation-delay: 0.22s; }
+    .stage-view.active .fade-cascade-4 { animation-delay: 0.30s; }
+    .stage-view.active .fade-cascade-5 { animation-delay: 0.38s; }
+
+    @keyframes stageFadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Glassmorphism Cards: Deep frosted glass look with soft blur and thin glowing border */
     .glass-card {
       background: var(--bg-card);
       backdrop-filter: blur(24px);
@@ -266,9 +385,9 @@
       border-radius: 28px;
       padding: 2rem 1.5rem;
       box-shadow: 
-        0 20px 50px rgba(0, 0, 0, 0.5),
-        0 0 40px rgba(255, 117, 151, 0.05),
-        inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        0 24px 60px rgba(0, 0, 0, 0.6),
+        0 0 35px rgba(255, 117, 151, 0.08),
+        inset 0 1px 1px rgba(255, 255, 255, 0.18);
       position: relative;
       overflow: hidden;
       transition: border-color 0.4s ease, box-shadow 0.4s ease;
@@ -287,8 +406,111 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(255, 117, 151, 0.55), rgba(252, 211, 77, 0.55), transparent);
+    }
+
+    /* Interactive Touch & Click Effects */
+    .btn-glow-primary, .btn-cake-action, .trait-card, .gift-parcel-box, .sound-toggle-btn, .btn-birthday-song, .birthday-photo-container {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .touch-ripple-effect {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 117, 151, 0.65) 0%, rgba(252, 211, 77, 0.35) 45%, transparent 70%);
+      transform: scale(0);
+      pointer-events: none;
+      animation: rippleExpand 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      z-index: 99;
+    }
+
+    @keyframes rippleExpand {
+      to {
+        transform: scale(3.5);
+        opacity: 0;
+      }
+    }
+
+    /* Dynamic Time-Based Greeting Banner */
+    .dynamic-time-greeting {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 117, 151, 0.3);
+      padding: 0.5rem 1.15rem;
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #F8FAFC;
+      margin-bottom: 1.25rem;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 15px rgba(255, 117, 151, 0.15);
+      animation: dynamicGlowPulse 4s infinite ease-in-out;
+      text-align: center;
+      max-width: 95%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .dynamic-time-greeting .greeting-icon {
+      font-size: 1.05rem;
+      display: inline-block;
+      animation: gentleIconSway 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes gentleIconSway {
+      0% { transform: rotate(-8deg) scale(1); }
+      100% { transform: rotate(8deg) scale(1.15); }
+    }
+
+    @keyframes dynamicGlowPulse {
+      0%, 100% { 
+        border-color: rgba(255, 117, 151, 0.3); 
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 14px rgba(255, 117, 151, 0.15); 
+      }
+      50% { 
+        border-color: rgba(252, 211, 77, 0.5); 
+        box-shadow: 0 4px 22px rgba(0, 0, 0, 0.45), 0 0 22px rgba(252, 211, 77, 0.25); 
+      }
+    }
+
+    /* Elegant Cursive Typography */
+    .cursive-accent {
+      font-family: var(--font-cursive);
+      font-size: 1.7em;
+      letter-spacing: 0.03em;
+      color: var(--accent-rose);
+      display: inline-block;
+      line-height: 1;
+      text-shadow: 0 0 16px rgba(255, 117, 151, 0.45);
+    }
+
+    .cursive-hero-prefix {
+      font-family: var(--font-cursive);
+      font-size: 1.45em;
+      font-weight: 400;
+      color: var(--accent-rose);
+      margin-right: 0.35rem;
+      letter-spacing: 0.04em;
+      background: linear-gradient(135deg, #FF7597 0%, #FCD34D 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      vertical-align: baseline;
+    }
+
+    .cursive-accent-heading {
+      font-family: var(--font-cursive);
+      font-size: clamp(1.85rem, 4.5vw, 2.65rem);
+      color: var(--accent-rose);
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.03em;
+      text-shadow: 0 2px 14px rgba(255, 117, 151, 0.45);
     }
 
     /* Typography */
@@ -1487,40 +1709,103 @@
       position: relative;
       border-radius: 26px;
       padding: 10px;
-      background: linear-gradient(135deg, rgba(255, 117, 151, 0.45) 0%, rgba(245, 158, 11, 0.35) 50%, rgba(167, 139, 250, 0.45) 100%);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 35px rgba(255, 117, 151, 0.25);
+      background: linear-gradient(135deg, rgba(255, 117, 151, 0.75) 0%, rgba(245, 158, 11, 0.6) 33%, rgba(167, 139, 250, 0.75) 66%, rgba(56, 189, 248, 0.6) 100%);
+      background-size: 300% 300%;
+      animation: frameGradientFlow 8s ease infinite;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 35px rgba(255, 117, 151, 0.35);
       transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
       cursor: pointer;
+      overflow: visible;
+    }
+
+    .birthday-photo-container::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 31px;
+      background: linear-gradient(135deg, #FF7597, #FCD34D, #A78BFA, #38BDF8);
+      background-size: 300% 300%;
+      animation: frameGradientFlow 6s ease infinite;
+      filter: blur(14px);
+      opacity: 0.55;
+      z-index: -1;
+      transition: opacity 0.4s ease, filter 0.4s ease;
     }
 
     .birthday-photo-container:hover {
-      animation: photoHeartbeatPulse 1.4s infinite ease-in-out;
+      animation: photoHeartbeatPulse 1.25s infinite cubic-bezier(0.215, 0.61, 0.355, 1), frameGradientFlow 3.5s ease infinite;
+    }
+
+    .birthday-photo-container:hover::before {
+      opacity: 0.95;
+      filter: blur(24px);
+    }
+
+    @keyframes frameGradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Floating Heart Emojis Spawning Particle System */
+    .floating-heart-particle {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      z-index: 999;
+      font-size: 1.6rem;
+      filter: drop-shadow(0 4px 10px rgba(255, 117, 151, 0.7));
+      will-change: transform, opacity;
+      animation: floatHeartDriftUp 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    @keyframes floatHeartDriftUp {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.4) rotate(0deg);
+      }
+      15% {
+        opacity: 1;
+        transform: translate(var(--dx1, 12px), -35px) scale(1.25) rotate(var(--rot1, 12deg));
+      }
+      50% {
+        opacity: 0.92;
+        transform: translate(var(--dx2, -18px), -90px) scale(1.1) rotate(var(--rot2, -15deg));
+      }
+      85% {
+        opacity: 0.65;
+        transform: translate(var(--dx3, 22px), -145px) scale(0.9) rotate(var(--rot3, 20deg));
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--dx3, 25px), -185px) scale(0.3) rotate(var(--rot3, 30deg));
+      }
     }
 
     @keyframes photoHeartbeatPulse {
       0% {
-        transform: translateY(-4px) scale(1.015);
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 117, 151, 0.3);
+        transform: translateY(-4px) scale(1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 30px rgba(255, 117, 151, 0.3);
       }
-      15% {
-        transform: translateY(-5px) scale(1.032);
-        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.75), 0 0 48px rgba(255, 117, 151, 0.45), 0 0 25px rgba(252, 211, 77, 0.3);
+      14% {
+        transform: translateY(-7px) scale(1.035);
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.75), 0 0 52px rgba(255, 117, 151, 0.6), 0 0 25px rgba(252, 211, 77, 0.4);
       }
-      30% {
-        transform: translateY(-4px) scale(1.018);
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 117, 151, 0.3);
+      28% {
+        transform: translateY(-4px) scale(1.012);
+        box-shadow: 0 22px 55px rgba(0, 0, 0, 0.68), 0 0 34px rgba(255, 117, 151, 0.35);
       }
-      45% {
-        transform: translateY(-6px) scale(1.04);
-        box-shadow: 0 30px 75px rgba(0, 0, 0, 0.8), 0 0 54px rgba(255, 117, 151, 0.55), 0 0 30px rgba(252, 211, 77, 0.35);
+      42% {
+        transform: translateY(-9px) scale(1.048);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.82), 0 0 62px rgba(255, 117, 151, 0.7), 0 0 32px rgba(252, 211, 77, 0.45);
       }
       70% {
-        transform: translateY(-4px) scale(1.015);
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 117, 151, 0.3);
+        transform: translateY(-4px) scale(1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 30px rgba(255, 117, 151, 0.3);
       }
       100% {
-        transform: translateY(-4px) scale(1.015);
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 117, 151, 0.3);
+        transform: translateY(-4px) scale(1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 30px rgba(255, 117, 151, 0.3);
       }
     }
 
@@ -2059,15 +2344,27 @@
 
       <div class="header-actions">
         <button id="soundToggle" class="sound-toggle-btn" aria-label="Toggle ambient sound">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-          <span>Music</span>
-          <div class="sound-wave-bars">
-            <span class="sound-bar"></span>
-            <span class="sound-bar"></span>
-            <span class="sound-bar"></span>
+          <span class="sound-icon-wrap">
+            <!-- Active Speaker Icon -->
+            <svg id="soundIconOn" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+            <!-- Muted Speaker Icon -->
+            <svg id="soundIconMuted" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          </span>
+          <span id="soundToggleLabel">Music</span>
+          <div class="sound-wave-bars" aria-hidden="true">
+            <span class="sound-bar bar-1"></span>
+            <span class="sound-bar bar-2"></span>
+            <span class="sound-bar bar-3"></span>
+            <span class="sound-bar bar-4"></span>
+            <span class="sound-bar bar-5"></span>
           </div>
         </button>
       </div>
@@ -2089,6 +2386,12 @@
             <span class="weather-sub">· 🌴 28°C Gentle Breeze</span>
           </div>
 
+          <!-- Dynamic Time-Based Greeting Banner (Personalized for Abe) -->
+          <div id="dynamicGreetingBanner" class="dynamic-time-greeting" title="Real-time greeting calculated for Manila, Philippines">
+            <span class="greeting-icon" id="dynamicGreetingIcon">✨</span>
+            <span id="dynamicGreetingText">Synchronizing greeting for Manila time...</span>
+          </div>
+
           <div style="display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--accent-rose); font-weight: 600; margin-bottom: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
@@ -2098,7 +2401,9 @@
             Special Delivery · A Digital Keepsake
           </div>
 
-          <h1 class="display-title">Dearest Abe ✨</h1>
+          <h1 class="display-title">
+            <span class="cursive-hero-prefix">Dearest</span> Abe ✨
+          </h1>
 
           <p class="display-subtitle" style="margin-left: auto; margin-right: auto;">
             Since a physical parcel couldn't fly across ten thousand kilometers of ocean in time to reach the Philippines, I built you an enchanted digital treasure instead.
@@ -2345,6 +2650,7 @@
             <span>Transmission Decrypted · Manila Time</span>
           </div>
 
+          <div class="cursive-accent-heading">Celebrating a wonderful soul...</div>
           <h1 class="birthday-greeting">Happy Birthday, Abe! 🎂✨</h1>
 
           <p class="display-subtitle" style="margin-left: auto; margin-right: auto; max-width: 580px;">
@@ -2752,6 +3058,35 @@
       let audioCtx = null;
       let isPlayingSound = false;
       let chimeInterval = null;
+      let currentMusicMode = 'ambient'; // 'ambient' or 'birthday'
+      let birthdaySongTimeout = null;
+
+      const soundToggleBtn = document.getElementById('soundToggle');
+      const soundToggleLabel = document.getElementById('soundToggleLabel');
+      const soundIconOn = document.getElementById('soundIconOn');
+      const soundIconMuted = document.getElementById('soundIconMuted');
+
+      function updateSoundToggleUI() {
+        if (!soundToggleBtn) return;
+        if (isPlayingSound) {
+          soundToggleBtn.classList.add('sound-playing');
+          soundToggleBtn.setAttribute('aria-label', 'Mute background music');
+          if (soundToggleLabel) {
+            soundToggleLabel.textContent = currentMusicMode === 'birthday' ? 'Birthday Song' : 'Mute Music';
+          }
+          if (soundIconOn) soundIconOn.style.display = 'block';
+          if (soundIconMuted) soundIconMuted.style.display = 'none';
+        } else {
+          soundToggleBtn.classList.remove('sound-playing');
+          soundToggleBtn.setAttribute('aria-label', 'Unmute background music');
+          if (soundToggleLabel) {
+            soundToggleLabel.textContent = 'Unmute';
+          }
+          if (soundIconOn) soundIconOn.style.display = 'none';
+          if (soundIconMuted) soundIconMuted.style.display = 'block';
+        }
+      }
+      updateSoundToggleUI();
 
       function initAudio() {
         if (!audioCtx) {
@@ -2788,10 +3123,6 @@
           console.warn("Audio note error:", e);
         }
       }
-
-      // Audio Modes: 'ambient' | 'birthday'
-      let currentMusicMode = 'ambient';
-      let birthdaySongTimeout = null;
 
       // Melodic Dreamy Chime Sequence (E major 9 / Lydian celestial chord)
       const celestialScale = [329.63, 415.30, 493.88, 622.25, 659.25, 830.61, 987.77];
@@ -2937,9 +3268,7 @@
 
         currentMusicMode = 'birthday';
         isPlayingSound = true;
-
-        soundToggleBtn.classList.add('sound-playing');
-        soundToggleBtn.querySelector('span').textContent = '🎂 Birthday Song';
+        updateSoundToggleUI();
 
         const btnReplay = document.getElementById('btnReplayBirthdaySong');
         if (btnReplay) {
@@ -3041,6 +3370,26 @@
         } catch (e) {}
       }
 
+      function playButtonTapSound() {
+        if (!audioCtx) initAudio();
+        if (!audioCtx || audioCtx.state === 'suspended') return;
+        try {
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(784, now); // G5
+          osc.frequency.exponentialRampToValueAtTime(1318.5, now + 0.06); // E6
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.08, now + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.09);
+        } catch (e) {}
+      }
+
       function playMatchStrikeSound() {
         if (!audioCtx) initAudio();
         if (!audioCtx) return;
@@ -3114,28 +3463,25 @@
         });
       }
 
-      // Audio Toggle Button
-      const soundToggleBtn = document.getElementById('soundToggle');
-      soundToggleBtn.addEventListener('click', () => {
-        initAudio();
-        isPlayingSound = !isPlayingSound;
-        if (isPlayingSound) {
-          soundToggleBtn.classList.add('sound-playing');
-          if (currentMusicMode === 'birthday') {
-            soundToggleBtn.querySelector('span').textContent = '🎂 Birthday Song';
-            startHappyBirthdayMusic();
+      // Audio Toggle Button Listener
+      if (soundToggleBtn) {
+        soundToggleBtn.addEventListener('click', () => {
+          initAudio();
+          isPlayingSound = !isPlayingSound;
+          if (isPlayingSound) {
+            if (currentMusicMode === 'birthday') {
+              startHappyBirthdayMusic();
+            } else {
+              startAmbientChimes();
+            }
+            playSuccessChime();
           } else {
-            soundToggleBtn.querySelector('span').textContent = 'Mute';
-            startAmbientChimes();
+            stopAmbientChimes();
+            stopHappyBirthdayMusic();
           }
-          playSuccessChime();
-        } else {
-          soundToggleBtn.classList.remove('sound-playing');
-          soundToggleBtn.querySelector('span').textContent = 'Music';
-          stopAmbientChimes();
-          stopHappyBirthdayMusic();
-        }
-      });
+          updateSoundToggleUI();
+        });
+      }
 
       // Dedicated Birthday Song Button on Reveal Stage
       const btnReplayBirthdaySong = document.getElementById('btnReplayBirthdaySong');
@@ -3145,11 +3491,10 @@
           if (isPlayingSound && currentMusicMode === 'birthday' && birthdaySongTimeout) {
             stopHappyBirthdayMusic();
             isPlayingSound = false;
-            soundToggleBtn.classList.remove('sound-playing');
-            soundToggleBtn.querySelector('span').textContent = 'Music';
           } else {
             startHappyBirthdayMusic();
           }
+          updateSoundToggleUI();
         });
       }
 
@@ -3162,6 +3507,7 @@
       let fireflies = [];
       let touchFireflies = [];
       let shootingStars = [];
+      let ambientHearts = [];
       let width, height;
 
       const fireflyColors = ['#FDE047', '#34D399', '#6EE7B7', '#FBBF24', '#FFA8BD'];
@@ -3171,6 +3517,7 @@
         height = starCanvas.height = window.innerHeight;
         initStars();
         initFireflies();
+        initAmbientHearts();
       }
 
       function initStars() {
@@ -3206,6 +3553,34 @@
             wanderOffset: Math.random() * 100
           });
         }
+      }
+
+      function initAmbientHearts() {
+        ambientHearts = [];
+        const count = Math.min(22, Math.max(10, Math.floor(width / 75)));
+        for (let i = 0; i < count; i++) {
+          ambientHearts.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            size: Math.random() * 14 + 8,
+            speedY: Math.random() * 0.4 + 0.2,
+            speedX: (Math.random() - 0.5) * 0.35,
+            pulse: Math.random() * Math.PI * 2,
+            pulseSpeed: Math.random() * 0.025 + 0.015,
+            color: Math.random() > 0.45 ? 'rgba(255, 117, 151, ' : (Math.random() > 0.5 ? 'rgba(252, 211, 77, ' : 'rgba(167, 139, 250, ')
+          });
+        }
+      }
+
+      function drawCanvasHeart(ctx, x, y, size) {
+        ctx.beginPath();
+        const topCurveHeight = size * 0.3;
+        ctx.moveTo(x, y + topCurveHeight);
+        ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + topCurveHeight);
+        ctx.bezierCurveTo(x - size / 2, y + (size + topCurveHeight) / 2, x, y + (size + topCurveHeight) / 1.3, x, y + size);
+        ctx.bezierCurveTo(x, y + (size + topCurveHeight) / 1.3, x + size / 2, y + (size + topCurveHeight) / 2, x + size / 2, y + topCurveHeight);
+        ctx.bezierCurveTo(x + size / 2, y, x, y, x, y + topCurveHeight);
+        ctx.closePath();
       }
 
       function spawnTouchFirefly(clientX, clientY) {
@@ -3310,6 +3685,29 @@
           starCtx.fill();
           starCtx.restore();
         }
+
+        // Draw Gentle Floating Ambient Hearts & Glowing Stardust
+        ambientHearts.forEach(h => {
+          h.y -= h.speedY;
+          h.x += h.speedX + Math.sin(timeNow + h.pulse) * 0.45;
+          h.pulse += h.pulseSpeed;
+
+          if (h.y < -35) {
+            h.y = height + 35;
+            h.x = Math.random() * width;
+          }
+          if (h.x < -35) h.x = width + 35;
+          if (h.x > width + 35) h.x = -35;
+
+          const heartAlpha = 0.22 + 0.16 * Math.sin(h.pulse);
+          starCtx.save();
+          starCtx.fillStyle = h.color + heartAlpha + ')';
+          starCtx.shadowColor = h.color + '0.5)';
+          starCtx.shadowBlur = 10;
+          drawCanvasHeart(starCtx, h.x, h.y, h.size);
+          starCtx.fill();
+          starCtx.restore();
+        });
 
         // Spawn & Draw Shooting Stars
         spawnShootingStar();
@@ -3465,10 +3863,10 @@
             stopHappyBirthdayMusic();
             if (isPlayingSound) {
               currentMusicMode = 'ambient';
-              soundToggleBtn.querySelector('span').textContent = 'Mute';
               startAmbientChimes();
             }
           }
+          updateSoundToggleUI();
         }
 
         // Scroll to top of viewport smoothly
@@ -3600,16 +3998,18 @@
       });
 
       // Start Quest Button
-      document.getElementById('btnStartQuest').addEventListener('click', () => {
+      document.getElementById('btnStartQuest').addEventListener('click', (e) => {
         initAudio();
         if (!isPlayingSound) {
           // Autoplay on first button press
           isPlayingSound = true;
-          soundToggleBtn.classList.add('sound-playing');
-          soundToggleBtn.querySelector('span').textContent = 'Mute';
           startAmbientChimes();
         }
+        updateSoundToggleUI();
         playSuccessChime();
+        const rect = e.currentTarget.getBoundingClientRect();
+        fireConfettiBurst(75, rect.left + rect.width / 2, rect.top + rect.height / 2);
+        spawnShootingStar();
         goToStage('clue1');
       });
 
@@ -4201,7 +4601,7 @@
         }
       });
 
-      btnCopyHtml.addEventListener('click', async () => {
+        btnCopyHtml.addEventListener('click', async () => {
         try {
           const fullHtml = document.documentElement.outerHTML;
           await navigator.clipboard.writeText(fullHtml);
@@ -4213,6 +4613,157 @@
           copyStatusText.textContent = 'Select all & copy manual';
         }
       });
+
+      /* ------------------------------------------------------------------------
+         11. DYNAMIC GREETING, TOUCH RIPPLES & FLOATING HEART PARTICLE SYSTEM
+         ------------------------------------------------------------------------ */
+
+      // 1. Dynamic Time-Based Greeting Synchronizer (Manila Time)
+      function updateDynamicGreeting() {
+        const greetingTextEl = document.getElementById('dynamicGreetingText');
+        const greetingIconEl = document.getElementById('dynamicGreetingIcon');
+        if (!greetingTextEl) return;
+
+        let manilaHour = 12;
+        try {
+          const manilaTimeStr = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
+          manilaHour = new Date(manilaTimeStr).getHours();
+        } catch (e) {
+          manilaHour = new Date().getHours();
+        }
+
+        let icon = '✨';
+        let greeting = '';
+
+        if (manilaHour >= 5 && manilaHour < 12) {
+          icon = '☀️';
+          greeting = 'Good morning, Abe! ☀️ Wishing you a bright, sun-kissed birthday in the Philippines.';
+        } else if (manilaHour >= 12 && manilaHour < 17) {
+          icon = '🌤️';
+          greeting = 'Good afternoon, Abe! 🌤️ Hope your birthday is filled with radiant warmth, joy, and laughter.';
+        } else if (manilaHour >= 17 && manilaHour < 21) {
+          icon = '🌇';
+          greeting = 'Good evening, Abe! 🌇 May golden sunset skies and starry melodies bless your special night.';
+        } else {
+          icon = '🌙';
+          greeting = 'Good night & sweet dreams, Abe! 🌙 Under the Philippine starry sky, this keepsake was made just for you.';
+        }
+
+        greetingTextEl.textContent = greeting;
+        if (greetingIconEl) greetingIconEl.textContent = icon;
+      }
+
+      updateDynamicGreeting();
+      setInterval(updateDynamicGreeting, 60000);
+
+      // 2. Birthday Photo Container Floating Heart Emojis Particle System
+      const photoFrame = document.querySelector('.birthday-photo-container');
+      if (photoFrame) {
+        let heartInterval = null;
+        const heartEmojis = ['💖', '💕', '💗', '💓', '✨', '🌸', '🎂', '💝', '⭐'];
+
+        function spawnHeartParticle(customX = null, customY = null) {
+          const heart = document.createElement('span');
+          heart.className = 'floating-heart-particle';
+          heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+
+          const rect = photoFrame.getBoundingClientRect();
+          const posX = customX !== null ? customX : Math.random() * (rect.width - 50) + 25;
+          const posY = customY !== null ? customY : (rect.height - 20) + (Math.random() * 20 - 10);
+
+          heart.style.left = `${posX}px`;
+          heart.style.top = `${posY}px`;
+
+          const dx1 = (Math.random() - 0.5) * 60;
+          const dx2 = (Math.random() - 0.5) * 90;
+          const dx3 = (Math.random() - 0.5) * 120;
+          const rot1 = (Math.random() - 0.5) * 35;
+          const rot2 = (Math.random() - 0.5) * 45;
+          const rot3 = (Math.random() - 0.5) * 60;
+
+          heart.style.setProperty('--dx1', `${dx1}px`);
+          heart.style.setProperty('--dx2', `${dx2}px`);
+          heart.style.setProperty('--dx3', `${dx3}px`);
+          heart.style.setProperty('--rot1', `${rot1}deg`);
+          heart.style.setProperty('--rot2', `${rot2}deg`);
+          heart.style.setProperty('--rot3', `${rot3}deg`);
+
+          const duration = (Math.random() * 0.7 + 1.8).toFixed(2);
+          heart.style.animationDuration = `${duration}s`;
+
+          photoFrame.appendChild(heart);
+
+          heart.addEventListener('animationend', () => {
+            heart.remove();
+          });
+        }
+
+        photoFrame.addEventListener('mouseenter', () => {
+          spawnHeartParticle();
+          spawnHeartParticle();
+          if (heartInterval) clearInterval(heartInterval);
+          heartInterval = setInterval(() => {
+            spawnHeartParticle();
+          }, 240);
+        });
+
+        photoFrame.addEventListener('mouseleave', () => {
+          if (heartInterval) {
+            clearInterval(heartInterval);
+            heartInterval = null;
+          }
+        });
+
+        photoFrame.addEventListener('mousemove', (e) => {
+          if (Math.random() < 0.25) {
+            const rect = photoFrame.getBoundingClientRect();
+            spawnHeartParticle(e.clientX - rect.left, e.clientY - rect.top);
+          }
+        });
+
+        // Click on Photo Container: Celebratory Starburst & Confetti Blast!
+        photoFrame.addEventListener('click', (e) => {
+          initAudio();
+          for (let i = 0; i < 7; i++) {
+            setTimeout(() => spawnHeartParticle(), i * 50);
+          }
+          const rect = photoFrame.getBoundingClientRect();
+          fireConfettiBurst(70, rect.left + rect.width / 2, rect.top + rect.height * 0.4);
+          spawnShootingStar();
+          playCelebrationFanfare();
+        });
+      }
+
+      // 3. Interactive Touch Ripples & Sound Effects on Buttons & Cards
+      function addRippleAndSound(el) {
+        el.addEventListener('pointerdown', (e) => {
+          initAudio();
+          playButtonTapSound();
+
+          const rect = el.getBoundingClientRect();
+          const ripple = document.createElement('span');
+          ripple.className = 'touch-ripple-effect';
+          const size = Math.max(rect.width, rect.height) * 2;
+          ripple.style.width = ripple.style.height = `${size}px`;
+
+          const clientX = e.clientX !== undefined ? e.clientX : rect.left + rect.width / 2;
+          const clientY = e.clientY !== undefined ? e.clientY : rect.top + rect.height / 2;
+
+          ripple.style.left = `${clientX - rect.left - size / 2}px`;
+          ripple.style.top = `${clientY - rect.top - size / 2}px`;
+
+          el.appendChild(ripple);
+
+          ripple.addEventListener('animationend', () => {
+            ripple.remove();
+          });
+        });
+      }
+
+      const interactiveTargets = document.querySelectorAll(
+        'button, .btn-glow-primary, .btn-cake-action, .vibe-chip-btn, .trait-card, .btn-birthday-song'
+      );
+      interactiveTargets.forEach(addRippleAndSound);
 
     })();
   </script>
